@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Card from "./Card.js";
 import ArtistCard from "./ArtistCard.js";
+import { Route, Link } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -44,16 +45,34 @@ class App extends Component {
   render() {
     return (
       <div>
-        {this.state.artists.map((artist) => 
-          <ArtistCard name={artist.name} genre={artist.genre} id={artist.id} />
-        )}
-        
-        <Card>
-          <button onClick={this.handleClick}>Pegar os artistas</button>
-        </Card>
+        <Menu />
+        <hr />
+        <div class='content'>
+          <Route path='/artists' render={ () => 
+            <div> 
+              {this.state.artists.map((artist) => 
+                <ArtistCard name={artist.name} genre={artist.genre} id={artist.id} />
+              )}
+            </div>
+          } />
+          <Route path="/" exact={true} component={Home} />
+        </div>
       </div>
     );
   }
 }
 
+const Home = () => {
+  return (<h2>Página princial</h2>)  
+}
+
+const Menu = () => {
+  return (
+    <ul class='menu'>
+      <li><Link to="/">Home</Link></li>
+      <li><Link to="/artists">Artistas</Link></li>
+      <li><Link to="/radios">Rádios</Link></li>
+    </ul>
+  )
+}
 export default App;
