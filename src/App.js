@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Card from './Card.js';
 import ArtistCard from './ArtistCard.js';
+import { Route, Link } from 'react-router-dom';
 
 class App extends Component {
   constructor(props){
@@ -13,8 +14,8 @@ class App extends Component {
     };
 
     this.handleClick = this.handleClick.bind(this);
-
   }
+
   componentDidMount(){
     const BASE_URL = 'https://peaceful-badlands-98440.herokuapp.com';
     const BASE_OPTIONS = {
@@ -26,6 +27,7 @@ class App extends Component {
       credentials: 'include',
       body: JSON.stringify({email: 'rafael@laboratoria.la', password: 'banana'})
     };
+
     fetch(`${BASE_URL}/login`, options)
       // .then(data => console.log(data));
       .then(res => {
@@ -38,15 +40,62 @@ class App extends Component {
           .then(data => this.setState({ artists: data }));
       })
   }
+
   handleClick(){
   }
   render() {
     return (
       <div>
-        {this.state.artists.map(artist => <ArtistCard {...artist} key={artist.id} />)}
+        <nav className="menu">
+          <Link to="/">Home</Link>
+          <Link to="/artists">Artistas</Link>
+          <Link to="/about">Sobre nós</Link>
+          <Link to="/contato">Entre em Contato</Link>
+        </nav>
+        <Route path="/" exact component={Home} />
+        <Route path="/about" exact component={About}/>
+        <Route path="/artists" render={ () =>
+          <div>
+            {this.state.artists.map(artist => <ArtistCard {...artist} key={artist.id} />)}
+          </div>
+        } />
+
+        <Route path="/about/yes" render={() => "Isso mesmo " } />
+        <Route path="/about/:id" render={({match}) => "O id veio " + match.params.id } />
+
       </div>
     );
   }
 }
+
+const Home = () => {
+  return (
+    <div>
+      <h2>Home legal</h2>
+      <p>Bem vinda a nossa grande maravilhosa e incrível app de react</p>
+    </div>
+  )
+}
+
+const About = () => {
+  return (
+    <div>
+      <h1>legal</h1>
+      Nós somos demais.
+      <Link to="/about/yes">clica aqui</Link>
+
+    </div>
+  )
+}
+
+
+
+
+
+
+
+
+
+
 
 export default App;
